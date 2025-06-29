@@ -9,8 +9,14 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        // Jika sudah login, redirect ke dashboard
+        // Jika sudah login, redirect berdasarkan role
         if (Session::get('authenticated')) {
+            $user = Session::get('user');
+            if ($user['role'] === 'Kasir') {
+                return redirect()->route('cashier.index');
+            } elseif ($user['role'] === 'Barista') {
+                return redirect()->route('barista.index');
+            }
             return redirect()->route('dashboard');
         }
 
@@ -30,6 +36,7 @@ class AuthController extends Controller
             ['email' => 'manager@coffeshop.com', 'password' => 'manager123', 'name' => 'Manager Coffee Shop', 'role' => 'Manager'],
             ['email' => 'staff@coffeshop.com', 'password' => 'staff123', 'name' => 'Staff Coffee Shop', 'role' => 'Staff'],
             ['email' => 'barista@coffeshop.com', 'password' => 'barista123', 'name' => 'Barista Coffee Shop', 'role' => 'Barista'],
+            ['email' => 'kasir@coffeshop.com', 'password' => 'kasir123', 'name' => 'Kasir Coffee Shop', 'role' => 'Kasir'],
         ];
 
         $email = $request->email;
@@ -43,8 +50,13 @@ class AuthController extends Controller
         if ($user) {
             // Simpan data user ke session
             Session::put('user', $user);
-            Session::put('authenticated', true);
-
+            Session::put('authenticated', true);            // Redirect berdasarkan role
+            if ($user['role'] === 'Kasir') {
+                return redirect()->route('cashier.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
+            } elseif ($user['role'] === 'Barista') {
+                return redirect()->route('barista.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
+            }
+            
             return redirect()->route('dashboard')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
         }
 

@@ -191,6 +191,14 @@
                     </div>
                     <small class="text-muted">barista@coffeshop.com / barista123</small>
                 </div>
+
+                <div class="demo-account" onclick="fillLogin('kasir@coffeshop.com', 'kasir123')">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><strong>Kasir</strong></span>
+                        <span class="badge bg-primary">Kasir</span>
+                    </div>
+                    <small class="text-muted">kasir@coffeshop.com / kasir123</small>
+                </div>
             </div>
         </div>
     </div>
