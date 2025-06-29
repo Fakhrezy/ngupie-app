@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cashier.access' => \App\Http\Middleware\CheckCashierAccess::class,
             'barista.access' => \App\Http\Middleware\CheckBaristaAccess::class,
             'staff.access' => \App\Http\Middleware\CheckStaffAccess::class,
+            'manager.access' => \App\Http\Middleware\CheckManagerAccess::class,
             'admin.access' => \App\Http\Middleware\CheckAdminAccess::class,
         ]);
     })

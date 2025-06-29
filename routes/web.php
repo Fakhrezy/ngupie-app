@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\BaristaController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ManagerController;
 
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -36,6 +37,14 @@ Route::middleware(['staff.access'])->group(function () {
     Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
     Route::post('/staff/check-in', [StaffController::class, 'checkIn'])->name('staff.check-in');
     Route::post('/staff/check-out', [StaffController::class, 'checkOut'])->name('staff.check-out');
+});
+
+// Manager routes (require authentication and manager role)
+Route::middleware(['manager.access'])->group(function () {
+    Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+    Route::post('/manager/update-status', [ManagerController::class, 'updateStatus'])->name('manager.update-status');
+    Route::post('/manager/bulk-update', [ManagerController::class, 'bulkUpdate'])->name('manager.bulk-update');
+    Route::post('/manager/export', [ManagerController::class, 'export'])->name('manager.export');
 });
 
 // Protected routes (require authentication and admin access)

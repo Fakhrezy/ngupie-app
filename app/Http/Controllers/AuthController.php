@@ -16,6 +16,10 @@ class AuthController extends Controller
                 return redirect()->route('cashier.index');
             } elseif ($user['role'] === 'Barista') {
                 return redirect()->route('barista.index');
+            } elseif ($user['role'] === 'Staff') {
+                return redirect()->route('staff.index');
+            } elseif ($user['role'] === 'Manager') {
+                return redirect()->route('manager.index');
             }
             return redirect()->route('dashboard');
         }
@@ -55,6 +59,10 @@ class AuthController extends Controller
                 return redirect()->route('cashier.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
             } elseif ($user['role'] === 'Barista') {
                 return redirect()->route('barista.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
+            } elseif ($user['role'] === 'Staff') {
+                return redirect()->route('staff.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
+            } elseif ($user['role'] === 'Manager') {
+                return redirect()->route('manager.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
             }
 
             return redirect()->route('dashboard')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
