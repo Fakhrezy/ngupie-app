@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\BaristaController;
+use App\Http\Controllers\StaffController;
 
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -28,6 +29,13 @@ Route::middleware(['cashier.access'])->group(function () {
     Route::get('/cashier', [CashierController::class, 'index'])->name('cashier.index');
     Route::post('/cashier/add-to-cart', [CashierController::class, 'addToCart'])->name('cashier.add-to-cart');
     Route::post('/cashier/payment', [CashierController::class, 'processPayment'])->name('cashier.payment');
+});
+
+// Staff routes (require authentication and staff role)
+Route::middleware(['staff.access'])->group(function () {
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::post('/staff/check-in', [StaffController::class, 'checkIn'])->name('staff.check-in');
+    Route::post('/staff/check-out', [StaffController::class, 'checkOut'])->name('staff.check-out');
 });
 
 // Protected routes (require authentication and admin access)

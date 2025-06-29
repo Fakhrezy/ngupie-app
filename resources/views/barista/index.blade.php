@@ -189,6 +189,23 @@
 
     <!-- Main Content -->
     <div class="container-fluid mt-3">
+        <!-- Alert Messages -->
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
         <!-- Statistics Cards -->
         <div class="row stats-cards">
             <div class="col-md-3">
@@ -445,11 +462,14 @@
         // Update order status
         async function updateOrderStatus(orderId, newStatus) {
             try {
+                console.log('Updating order:', orderId, 'to status:', newStatus);
+
                 const response = await fetch('{{ route("barista.update-status") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         order_id: orderId,
@@ -457,7 +477,12 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
                 const result = await response.json();
+                console.log('Response result:', result);
 
                 if (result.success) {
                     // Update UI
@@ -465,6 +490,7 @@
                     if (orderCard) {
                         // Update card classes
                         orderCard.className = orderCard.className.replace(/status-\w+/, `status-${newStatus}`);
+                        orderCard.dataset.status = newStatus;
 
                         // Update status badge
                         const badge = orderCard.querySelector('.status-badge');
@@ -484,18 +510,35 @@
                         // Update buttons
                         const buttons = orderCard.querySelectorAll('.btn-status');
                         buttons.forEach(btn => btn.disabled = false);
-                        orderCard.querySelector(`.btn-${newStatus === 'in_progress' ? 'progress' : newStatus}`).disabled = true;
+
+                        if (newStatus === 'pending') {
+                            orderCard.querySelector('.btn-pending').disabled = true;
+                        } else if (newStatus === 'in_progress') {
+                            orderCard.querySelector('.btn-progress').disabled = true;
+                        } else {
+                            orderCard.querySelector('.btn-complete').disabled = true;
+                        }
                     }
 
                     // Update statistics
                     updateStatistics();
 
                     // Show success message
-                    document.getElementById('success-message').textContent = result.message;
+                    document.getElementById('success-message').textContent = result.message || 'Status berhasil diperbarui';
                     new bootstrap.Modal(document.getElementById('successModal')).show();
+                } else {
+                    throw new Error(result.message || 'Update gagal');
                 }
             } catch (error) {
-                alert('Terjadi kesalahan saat memperbarui status');
+                console.error('Error updating status:', error);
+
+                // Fallback: refresh halaman jika AJAX gagal
+                const confirmed = confirm('Terjadi kesalahan. Apakah Anda ingin me-refresh halaman untuk mencoba lagi?');
+                if (confirmed) {
+                    location.reload();
+                } else {
+                    alert('Terjadi kesalahan saat memperbarui status: ' + error.message);
+                }
             }
         }
 
