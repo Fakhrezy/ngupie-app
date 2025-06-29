@@ -175,7 +175,7 @@
                         @endif
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-outline-light btn-sm" 
+                            <button type="submit" class="btn btn-outline-light btn-sm"
                                     onclick="return confirm('Logout dari barista station?')">
                                 <i class="fas fa-sign-out-alt me-1"></i>
                                 Logout
@@ -251,8 +251,8 @@
             <div class="col-12">
                 <div id="orders-container">
                     @foreach($orders as $order)
-                    <div class="order-card card {{ $order['priority'] === 'high' ? 'priority-high' : '' }} status-{{ $order['status'] }}" 
-                         data-status="{{ $order['status'] }}" 
+                    <div class="order-card card {{ $order['priority'] === 'high' ? 'priority-high' : '' }} status-{{ $order['status'] }}"
+                         data-status="{{ $order['status'] }}"
                          data-priority="{{ $order['priority'] }}"
                          data-order-id="{{ $order['id'] }}">
                         <div class="card-body">
@@ -268,7 +268,7 @@
                                             </p>
                                         </div>
                                         <div class="text-end">
-                                            <span class="badge status-badge 
+                                            <span class="badge status-badge
                                                 @if($order['status'] === 'pending') bg-warning text-dark
                                                 @elseif($order['status'] === 'in_progress') bg-info text-dark
                                                 @else bg-success
@@ -308,7 +308,7 @@
                                                 <br><small class="text-muted">Catatan: {{ $item['notes'] }}</small>
                                                 @endif
                                             </div>
-                                            <button class="btn recipe-btn btn-sm" 
+                                            <button class="btn recipe-btn btn-sm"
                                                     onclick="showRecipe('{{ $item['name'] }}')">
                                                 <i class="fas fa-book me-1"></i>
                                                 Resep
@@ -321,19 +321,19 @@
                                 <div class="col-md-4">
                                     <!-- Status Control -->
                                     <div class="status-buttons">
-                                        <button class="btn btn-status btn-pending btn-sm" 
+                                        <button class="btn btn-status btn-pending btn-sm"
                                                 onclick="updateOrderStatus('{{ $order['id'] }}', 'pending')"
                                                 {{ $order['status'] === 'pending' ? 'disabled' : '' }}>
                                             <i class="fas fa-clock me-1"></i>
                                             Pending
                                         </button>
-                                        <button class="btn btn-status btn-progress btn-sm" 
+                                        <button class="btn btn-status btn-progress btn-sm"
                                                 onclick="updateOrderStatus('{{ $order['id'] }}', 'in_progress')"
                                                 {{ $order['status'] === 'in_progress' ? 'disabled' : '' }}>
                                             <i class="fas fa-spinner me-1"></i>
                                             Kerjakan
                                         </button>
-                                        <button class="btn btn-status btn-complete btn-sm" 
+                                        <button class="btn btn-status btn-complete btn-sm"
                                                 onclick="updateOrderStatus('{{ $order['id'] }}', 'completed')"
                                                 {{ $order['status'] === 'completed' ? 'disabled' : '' }}>
                                             <i class="fas fa-check me-1"></i>
@@ -409,7 +409,7 @@
         function filterOrders(filter) {
             const orders = document.querySelectorAll('.order-card');
             const buttons = document.querySelectorAll('.btn-group .btn');
-            
+
             // Reset button states
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
@@ -417,9 +417,9 @@
             orders.forEach(order => {
                 const status = order.dataset.status;
                 const priority = order.dataset.priority;
-                
+
                 let show = false;
-                
+
                 switch(filter) {
                     case 'all':
                         show = true;
@@ -437,7 +437,7 @@
                         show = priority === 'high';
                         break;
                 }
-                
+
                 order.style.display = show ? 'block' : 'none';
             });
         }
@@ -458,18 +458,18 @@
                 });
 
                 const result = await response.json();
-                
+
                 if (result.success) {
                     // Update UI
                     const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
                     if (orderCard) {
                         // Update card classes
                         orderCard.className = orderCard.className.replace(/status-\w+/, `status-${newStatus}`);
-                        
+
                         // Update status badge
                         const badge = orderCard.querySelector('.status-badge');
                         badge.className = 'badge status-badge';
-                        
+
                         if (newStatus === 'pending') {
                             badge.classList.add('bg-warning', 'text-dark');
                             badge.textContent = 'Menunggu';
@@ -480,16 +480,16 @@
                             badge.classList.add('bg-success');
                             badge.textContent = 'Selesai';
                         }
-                        
+
                         // Update buttons
                         const buttons = orderCard.querySelectorAll('.btn-status');
                         buttons.forEach(btn => btn.disabled = false);
                         orderCard.querySelector(`.btn-${newStatus === 'in_progress' ? 'progress' : newStatus}`).disabled = true;
                     }
-                    
+
                     // Update statistics
                     updateStatistics();
-                    
+
                     // Show success message
                     document.getElementById('success-message').textContent = result.message;
                     new bootstrap.Modal(document.getElementById('successModal')).show();
@@ -504,7 +504,7 @@
             const modal = new bootstrap.Modal(document.getElementById('recipeModal'));
             const title = document.getElementById('recipe-title');
             const content = document.getElementById('recipe-content');
-            
+
             title.textContent = `Resep ${itemName}`;
             content.innerHTML = `
                 <div class="text-center">
@@ -514,13 +514,13 @@
                     <p class="mt-2">Memuat resep...</p>
                 </div>
             `;
-            
+
             modal.show();
-            
+
             try {
                 const response = await fetch(`{{ url('/barista/recipe') }}/${encodeURIComponent(itemName)}`);
                 const result = await response.json();
-                
+
                 if (result.success) {
                     const recipe = result.recipe;
                     content.innerHTML = `
@@ -531,7 +531,7 @@
                                 <strong>Waktu Persiapan:</strong> ${recipe.time}
                             </div>
                         </div>
-                        
+
                         <div class="recipe-section">
                             <h6><i class="fas fa-list-ul me-1"></i> Bahan-bahan:</h6>
                             ${recipe.ingredients.map(ingredient => `
@@ -541,7 +541,7 @@
                                 </div>
                             `).join('')}
                         </div>
-                        
+
                         <div class="recipe-section">
                             <h6><i class="fas fa-tasks me-1"></i> Langkah-langkah:</h6>
                             ${recipe.steps.map((step, index) => `
@@ -551,7 +551,7 @@
                                 </div>
                             `).join('')}
                         </div>
-                        
+
                         <div class="recipe-section">
                             <h6><i class="fas fa-lightbulb me-1"></i> Tips:</h6>
                             ${recipe.tips.map(tip => `
@@ -584,18 +584,18 @@
         function updateStatistics() {
             const orders = document.querySelectorAll('.order-card');
             let pending = 0, progress = 0, completed = 0, priority = 0;
-            
+
             orders.forEach(order => {
                 const status = order.dataset.status;
                 const priorityLevel = order.dataset.priority;
-                
+
                 if (status === 'pending') pending++;
                 else if (status === 'in_progress') progress++;
                 else if (status === 'completed') completed++;
-                
+
                 if (priorityLevel === 'high') priority++;
             });
-            
+
             document.getElementById('pending-count').textContent = pending;
             document.getElementById('progress-count').textContent = progress;
             document.getElementById('completed-count').textContent = completed;
@@ -606,7 +606,7 @@
         function printRecipe() {
             const content = document.getElementById('recipe-content').innerHTML;
             const title = document.getElementById('recipe-title').textContent;
-            
+
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <html>
@@ -615,14 +615,14 @@
                         <style>
                             body { font-family: Arial, sans-serif; margin: 20px; }
                             .recipe-section { margin-bottom: 20px; }
-                            .ingredient-item, .step-item, .tip-item { 
-                                margin: 10px 0; padding: 8px; background: #f8f9fa; border-radius: 4px; 
+                            .ingredient-item, .step-item, .tip-item {
+                                margin: 10px 0; padding: 8px; background: #f8f9fa; border-radius: 4px;
                             }
                             h6 { color: #8B4513; font-weight: bold; }
-                            .step-number { 
-                                background: #8B4513; color: white; border-radius: 50%; 
-                                width: 24px; height: 24px; display: inline-flex; 
-                                align-items: center; justify-content: center; margin-right: 8px; 
+                            .step-number {
+                                background: #8B4513; color: white; border-radius: 50%;
+                                width: 24px; height: 24px; display: inline-flex;
+                                align-items: center; justify-content: center; margin-right: 8px;
                             }
                         </style>
                     </head>

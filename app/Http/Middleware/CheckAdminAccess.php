@@ -13,12 +13,12 @@ class CheckAdminAccess
         if (!Session::get('authenticated')) {
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu.');
         }        $user = Session::get('user');
-        
+
         // Jika kasir, redirect ke halaman kasir
         if ($user['role'] === 'Kasir') {
             return redirect()->route('cashier.index')->with('info', 'Anda telah diarahkan ke halaman kasir.');
         }
-        
+
         // Jika barista, redirect ke halaman barista
         if ($user['role'] === 'Barista') {
             return redirect()->route('barista.index')->with('info', 'Anda telah diarahkan ke halaman barista.');

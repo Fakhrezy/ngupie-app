@@ -15,7 +15,7 @@ class CheckBaristaAccess
         }
 
         $user = Session::get('user');
-        
+
         // Jika bukan barista, redirect sesuai role
         if ($user['role'] !== 'Barista') {
             if ($user['role'] === 'Kasir') {

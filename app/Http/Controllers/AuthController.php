@@ -56,7 +56,7 @@ class AuthController extends Controller
             } elseif ($user['role'] === 'Barista') {
                 return redirect()->route('barista.index')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
             }
-            
+
             return redirect()->route('dashboard')->with('success', 'Login berhasil! Selamat datang ' . $user['name']);
         }
 
